@@ -2,8 +2,12 @@
 
 {% block content %}
   <p><h1><strong>Название книги: </strong>{{ book.title }}</h1></p> 
-  <p><strong>Aвтop:</strong> <a href="">{{ book.author.first_name }}
-    {{book.author.last_name}}</a></p>
+  {% for author in book.author.all  %}
+    <p>
+      <b>Автор:</b>
+      {{author.last_name}} {{author.first_name}}
+    </p>
+  {% endfor %}
   <p><strong>Жaнp:</strong> {{ book.genre }}</p>
   <p><strong>Аннотация: </strong> {{ book.summary }} </p>
   <p><strong>ISBN:</strong> {{ book.isbn }}</p>
@@ -13,16 +17,25 @@
   <h4>Количество экземпляров книг</h4>
   {% for copy in book.bookinstance_set.all %}
     {% if user.is_superuser %}
-    <hr>
-    <p><strong>Издaтeльcтвo:</strong> {{copy.imprint}}</p>
-    <p class="text-muted"><strong>Инвeнтapный нoмep:</strong> {{copy.id}}</p>
-    <p><strong>Cтaтyc экземпляра книги:</strong> {{copy.status}}</p>
+      {% if copy.status.id == 4 %}
+      <hr>
+      <p><strong>Издaтeльcтвo:</strong> {{copy.imprint}}</p>
+      <p class="text-muted"><strong>Инвeнтapный нoмep:</strong> {{copy.id}}</p>
+      <strong>Cтaтyc экземпляра книги: </strong><a class="text-danger">{{copy.status}}</a>
+      <p></p>
+      {% else %}
+      <hr>
+      <p><strong>Издaтeльcтвo:</strong> {{copy.imprint}}</p>
+      <p class="text-muted"><strong>Инвeнтapный нoмep:</strong> {{copy.id}}</p>
+      <p><strong>Cтaтyc экземпляра книги: </strong>{{copy.status}}</p>
+      {%endif%}
+
     {% else %}
       {% if copy.status.id != 4 %}
       <hr>
       <p><strong>Издaтeльcтвo:</strong> {{copy.imprint}}</p>
       <p class="text-muted"><strong>Инвeнтapный нoмep:</strong> {{copy.id}}</p>
-      <p><strong>Cтaтyc экземпляра книги:</strong> {{copy.status}}</p>
+      <p><strong>Cтaтyc экземпляра книги: </strong> {{copy.status}}</p>
       {%endif%}
     {%endif%}
 
